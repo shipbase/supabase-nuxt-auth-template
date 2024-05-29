@@ -26,7 +26,7 @@ import { IconGitHub } from '@/components/ui/icons'
             more
           </p>
           <div class="flex gap-2">
-            <Button @click="navigateTo('/login')">Get Started</Button>
+            <Button @click="navigateTo('/dashboard')">Get Started</Button>
           </div>
         </div>
       </section>

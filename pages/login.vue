@@ -18,18 +18,42 @@ const formData = reactive({
   email: '',
   password: '',
 })
+const loading = ref(false)
 
 const user = useSupabaseUser()
 const supabase = useSupabaseClient()
 
-const handleSingInWithPassword = async (e: Event) => {
+const singInWithPassword = async (e: Event) => {
   e.preventDefault()
-  const { data, error } = await supabase.auth.signInWithPassword(formData)
-  if (error) {
-    alert(error.message)
-    return
+  try {
+    loading.value = true
+    const { data, error } = await supabase.auth.signInWithPassword(formData)
+    if (error) throw error
+    console.log('🚀 ~ singInWithPassword ~ data:', data)
+  } catch (err) {
+    alert(err)
+  } finally {
+    loading.value = false
   }
-  console.log(data, error)
+}
+
+const signInWithGithub = async (e: Event) => {
+  e.preventDefault()
+  try {
+    loading.value = true
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: 'http://localhost:3000/confirm',
+      },
+    })
+    if (error) throw error
+    console.log('🚀 ~ signInWithGithub ~ data:', data)
+  } catch (err) {
+    alert(err)
+  } finally {
+    loading.value = false
+  }
 }
 
 watchEffect(async () => {
@@ -48,7 +72,7 @@ watchEffect(async () => {
       </CardDescription>
     </CardHeader>
     <CardContent>
-      <form @submit="handleSingInWithPassword">
+      <form @submit="singInWithPassword">
         <div class="grid gap-4">
           <div class="grid gap-2">
             <Label for="email">Email</Label>
@@ -75,7 +99,9 @@ watchEffect(async () => {
             />
           </div>
           <Button type="submit" class="w-full"> Login </Button>
-          <Button variant="outline" class="w-full"> Login with GitHub </Button>
+          <Button variant="outline" class="w-full" @click="signInWithGithub">
+            Login with GitHub
+          </Button>
         </div>
       </form>
       <div class="mt-4 text-center text-sm">

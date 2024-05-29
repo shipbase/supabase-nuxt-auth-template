@@ -12,7 +12,7 @@ const signOut = async () => {
   const { error } = await supabase.auth.signOut()
   if (error) {
   }
-  navigateTo('/', { replace: true })
+  navigateTo('/login', { replace: true })
 }
 </script>
 
@@ -20,10 +20,16 @@ const signOut = async () => {
   <div>
     <header class="flex px-4 py-2">
       <h1 class="text-xl font-semibold">Dashboard</h1>
-      <Button class="ml-auto" size="sm" variant="secondary" @click="signOut"
-        >SignOut</Button
-      >
+      <Button class="ml-auto" size="sm" variant="secondary" @click="signOut">
+        SignOut
+      </Button>
     </header>
-    <main class="px-4">Welcome, {{ user?.user_metadata?.firstName }}</main>
+    <main class="px-4">Welcome
+      <p>
+        <pre>
+          {{ JSON.stringify(user, null, 2) }}
+        </pre>
+      </p>
+    </main>
   </div>
 </template>

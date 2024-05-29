@@ -14,6 +14,8 @@ definePageMeta({
   layout: 'auth',
 })
 
+const loading = ref(false)
+
 const supabase = useSupabaseClient()
 const formData = reactive({
   firstName: '',
@@ -24,21 +26,25 @@ const formData = reactive({
 
 const signUp = async (e: Event) => {
   e.preventDefault()
-  const { data, error } = await supabase.auth.signUp({
-    email: formData.email,
-    password: formData.password,
-    options: {
-      data: {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+  try {
+    loading.value = true
+    const { data, error } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+      options: {
+        data: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+        },
       },
-    },
-  })
-  if (error) {
-    alert(error.message)
-    return
+    })
+    if (error) throw error
+    console.log('🚀 ~ signUp ~ data:', data)
+  } catch (err) {
+    alert(err)
+  } finally {
+    loading.value = false
   }
-  console.log(data, formData)
 }
 </script>
 
