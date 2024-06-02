@@ -22,6 +22,7 @@ const loading = ref(false)
 
 const user = useSupabaseUser()
 const supabase = useSupabaseClient()
+const config = useRuntimeConfig();
 
 const singInWithPassword = async (e: Event) => {
   e.preventDefault()
@@ -44,7 +45,7 @@ const signInWithGithub = async (e: Event) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: `${window.location.origin}/confirm`,
+        redirectTo: `${config.public.sitURL}/confirm`,
       },
     })
     if (error) throw error
