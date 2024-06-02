@@ -44,7 +44,7 @@ const signInWithGithub = async (e: Event) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: 'http://localhost:3000/confirm',
+        redirectTo: `${window.location.origin}/confirm`,
       },
     })
     if (error) throw error
@@ -98,9 +98,16 @@ watchEffect(async () => {
               required
             />
           </div>
-          <Button type="submit" class="w-full"> Login </Button>
-          <Button variant="outline" class="w-full" @click="signInWithGithub">
-            Login with GitHub
+          <Button :disabled="loading" type="submit" class="w-full">
+            {{ loading ? 'Loading...' : 'Login' }}
+          </Button>
+          <Button
+            :disabled="loading"
+            variant="outline"
+            class="w-full"
+            @click="signInWithGithub"
+          >
+            {{ loading ? 'Loading...' : 'Login with Github' }}
           </Button>
         </div>
       </form>

@@ -8,11 +8,18 @@ definePageMeta({
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 
+const loading = ref(false)
 const signOut = async () => {
-  const { error } = await supabase.auth.signOut()
-  if (error) {
+  try {
+    loading.value = true
+    const { error } = await supabase.auth.signOut()
+    if (error) throw error
+    navigateTo('/login', { replace: true })
+  } catch (err) {
+    alert(err)
+  } finally {
+    loading.value = false
   }
-  navigateTo('/login', { replace: true })
 }
 </script>
 
@@ -20,16 +27,19 @@ const signOut = async () => {
   <div>
     <header class="flex px-4 py-2">
       <h1 class="text-xl font-semibold">Dashboard</h1>
-      <Button class="ml-auto" size="sm" variant="secondary" @click="signOut">
-        SignOut
+      <Button
+        class="ml-auto"
+        size="sm"
+        variant="secondary"
+        :disabled="loading"
+        @click="signOut"
+      >
+        {{ loading ? 'Loading...' : 'Sign Out' }}
       </Button>
     </header>
-    <main class="px-4">Welcome
-      <p>
-        <pre>
-          {{ JSON.stringify(user, null, 2) }}
-        </pre>
-      </p>
+    <main class="px-4">
+      <p>Welcome</p>
+      <pre>{{ JSON.stringify(user, null, 2) }}</pre>
     </main>
   </div>
 </template>
