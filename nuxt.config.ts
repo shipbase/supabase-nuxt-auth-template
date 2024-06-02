@@ -10,4 +10,7 @@ export default defineNuxtConfig({
       callback: '/confirm',
     },
   },
+  nitro: {
+    preset: 'vercel',
+  },
 })
