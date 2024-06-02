@@ -22,15 +22,13 @@ const loading = ref(false)
 
 const user = useSupabaseUser()
 const supabase = useSupabaseClient()
-const config = useRuntimeConfig();
 
 const singInWithPassword = async (e: Event) => {
   e.preventDefault()
   try {
     loading.value = true
-    const { data, error } = await supabase.auth.signInWithPassword(formData)
+    const { error } = await supabase.auth.signInWithPassword(formData)
     if (error) throw error
-    console.log('🚀 ~ singInWithPassword ~ data:', data)
   } catch (err) {
     alert(err)
   } finally {
@@ -42,14 +40,15 @@ const signInWithGithub = async (e: Event) => {
   e.preventDefault()
   try {
     loading.value = true
-    const { data, error } = await supabase.auth.signInWithOAuth({
+
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: `${config.public.sitURL}/confirm`,
+        // Since we are using client-side login, we use window.location.origin as the redirect domain
+        redirectTo: `${window.location.origin}/confirm/`,
       },
     })
     if (error) throw error
-    console.log('🚀 ~ signInWithGithub ~ data:', data)
   } catch (err) {
     alert(err)
   } finally {

@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      sitURL: process.env.VERCEL_URL || 'http://localhost:3000',
+      sitURL: `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` || 'http://localhost:3000',
     },
   },
   nitro: {
